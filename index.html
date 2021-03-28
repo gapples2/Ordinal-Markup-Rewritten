@@ -32,7 +32,7 @@
       <div v-if="tab==2">
         <button onclick="switchTheme()">Current theme: {{["Cheater", "Light","Dark","Unpingabot"][style]}}</button>
       </div> 
-    <link :href="app.style == 1 ? 'light.css' : app.style == 2 ? 'dark.css' : 'blue.css'" rel="stylesheet" type="text/css" />
+    <link :href="style == 1 ? 'light.css' : style == 2 ? 'dark.css' : 'blue.css'" rel="stylesheet" type="text/css" />
     
     
   </div>
