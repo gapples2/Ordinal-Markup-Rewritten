@@ -45,10 +45,22 @@
       </div>
 
       <div v-if="tab==2">
-        <button onclick="theme.toggleTheme()">Current theme: {{["Light","Dark","Unpingabot"][game.themeId]}}</button><br>
-        <button onclick="hardReset()">Hard Reset</button>
-        <button onclick="exportSave()">Export</button>
-        <button onclick="importSave()">Import</button>
+        <div class="tabs">
+			    <button class="subtabButton"style="width:15%;" @click="optionSubTab = 1">Options</button>
+          <button v-if="game.themeId == 2" class="subtabButton"style="width:15%;" @click="optionSubTab = 2">Color Scheme</button>
+        </div><br>
+        <div v-if="(optionSubTab == 1)||(game.themeId != 2)">
+          <button onclick="theme.toggleTheme()">Current theme: {{["Light","Dark","Unpingabot"][game.themeId]}}</button><br>
+          <button onclick="hardReset()">Hard Reset</button>
+          <button onclick="exportSave()">Export</button>
+          <button onclick="importSave()">Import</button>
+        </div>
+        <div v-if="(optionSubTab == 2)&&(game.themeId == 2)">
+          Your color scheme: <br>
+          Text Color: <input v-model="game.customTheme.textColor"><br>
+          Background Color: <input v-model="game.customTheme.bgColor"><br>
+          <button onclick="updateTheme()">Apply Theme</button>
+        </div>
       </div> 
       <div v-if="tab==3">no</div>
       <div v-if="tab==4">
@@ -68,7 +80,7 @@
           <button class="markup" onclick="buyMaximizeAuto()">Buy Maximize Autoclicker for {{getAutoCost("maximize")}} OP</button>
         </div>
         <div v-if="markupSubTab == 2">
-          Factors go here
+          Factor 1 x1 
         </div>
         
       </div> 
@@ -76,7 +88,7 @@
     <!--<link :href="style == 1 ? 'css/light.css' : style == 2 ? 'css/dark.css' : 'css/blue.css'" rel="stylesheet" type="text/css" />
     -->
 
-    <link :href="game.themeId !== 2 ? 'css/main.css' : 'css/blue.css'" rel="stylesheet"> 
+    <link href="css/main.css" rel="stylesheet"> 
     <!--<link href="css/blue.css" rel="stylesheet" v-if="game.themeId === 2">  due to a large difference in the styles -->
   </div>
   </body>

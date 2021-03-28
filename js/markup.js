@@ -34,8 +34,11 @@ function buyMaximizeAuto() {
 }
 // FACTORS & FACTOR SHIFTS
 function buyFactor(n) { 
-  
+  if(game.ordinalPoints >= factorCost(n)) {
+    game.ordinalPoints -= factorCost(n)
+    game.factors[n]++
+  }
 } 
 function factorCost(n) {
-  game.factors[n]
+  return (10**n)**(2**game.factors[n])
 }

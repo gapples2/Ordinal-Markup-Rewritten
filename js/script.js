@@ -41,12 +41,17 @@ let game = {
   // actually imma keep the not really implemented yet shit out
   lastTick: Date.now(),
   themeId: 0,
+  customTheme: {
+    textColor: "#000000",
+    bgColor: "#ffffff",
+  }
 } // switched to let so that loading can work
 const app = new Vue({
   el: "#app",
   data: {
     tab: 1,
     markupSubTab: 1,
+    optionSubTab: 1,
     style: 1,
     game,
     displayOrd,
