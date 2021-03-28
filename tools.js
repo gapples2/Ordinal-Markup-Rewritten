@@ -56,12 +56,7 @@ function mergeDeep(target, ...sources) {
 
   return mergeDeep(target, ...sources);
 }
-// woah thankeres\
-// u made a lot of this for one of my games!
-// will need a bit of refining for vue2 but should work
-// pog
-// :)
-// lemme get expanta
-// actually
-// we can just do JSON.stringify for saving
-// yeah ik but idk what to json.stringify yet
+
+function switchTheme() {
+  app.style = app.style == 1 ? 2 : app.style == 2 ? 3 : 1 
+}

@@ -1,0 +1,21 @@
+body {
+  margin: 0em;
+  background-color: #41515E;
+  color: #ffffff;
+  text-align: center;
+  font-family: sans-serif
+}
+
+button {
+  margin: 0em;
+  background-color: #99BEDE;
+  font-size: 1.85vh;
+  color: #41515E;
+  border-color: #4075A4;
+  border-width: 5px;
+}
+.tabs {
+  width: 100%;
+}
+button:active {transform: scale(0.95);}
+button:focus {outline: none;}
