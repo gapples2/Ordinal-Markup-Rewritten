@@ -26,12 +26,13 @@ function save() {
 }
 
 async function load() {
-  if(localStorage.gamesave) game = await mergeDeep(game,decodeObject(JSON.parse(localStorage.gamesave)))
+  if (localStorage.gamesave) game = await mergeDeep(game,decodeObject(JSON.parse(localStorage.gamesave)))
+  setInterval(loop, 20) // nice
 } 
 
 window.onload = async () => {
   await load()
-  //setInterval(loop,20) // 50 ticks per second, 20ms delay
+  
   setInterval(save,10000) // 0.1 tick per second, 10000ms/10s delay
 }
 
@@ -58,5 +59,28 @@ function mergeDeep(target, ...sources) {
 }
 
 function switchTheme() {
-  app.style = app.style == 1 ? 2 : app.style == 2 ? 3 : 1 
+  app.style = app.style%3+1
+}
+
+function hardReset(){
+  if (window.confirm("Are you sure you want to reset your game?")) {
+    localStorage.removeItem("gamesave");  
+    location.reload();
+  } else window.alert("You have not reset your game.")
+}
+
+function exportSave() {
+  navigator.clipboard.writeText(btoa(JSON.stringify(game)))
+}
+
+function importSave() {
+  var x = window.prompt("Please enter your save in the text box below.");
+  if (x == "") {
+    if (window.confirm('Are you sure you want to reset? This is not a prestige layer; you do not get a boost. This action is irreversible.')) {
+      localStorage.clear();
+      location.reload();
+    }; 
+    return
+  };
+  game = mergeDeep(game,decodeObject(JSON.parse(atob(x))))
 }

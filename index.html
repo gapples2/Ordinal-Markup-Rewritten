@@ -4,37 +4,80 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DNA ordinal is 0</title> <!-- LMAO -->
-	
+	<title>Ordinal Markup : Rewritten</title> <!-- LMAO -->
+  <link rel="icon" href="https://cdn.glitch.com/310d7aca-4728-445f-9084-db26ceccd7b5%2FOrdinal%20Markup%20logo.png?v=1587927427273"/>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12">
+	</script>
+	<script src="https://raw.githack.com/Naruyoko/ExpantaNum.js/master/ExpantaNum.js" defer>
+	</script>
+	<script src="js/loop.js" defer>
+	</script>
+	<script src="js/tools.js" defer>
+	</script>
+	<script src="js/ordinal.js" defer>
+	</script>
+	<script src="js/markup.js" defer>
+	</script>
+	<script src="js/theme.js" defer>
+	</script>
+
+	<script src="js/script.js" defer>
+	</script>
 </head>
 
 <body>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
-	<script src="https://raw.githack.com/Naruyoko/ExpantaNum.js/master/ExpantaNum.js" defer></script>
-	<script src="loop.js" defer></script>
-	<script src="tools.js" defer></script>
-	<script src="ordinal.js" defer></script>
-	<script src="script.js" defer></script>
 	<div id="app">
 		<h1 v-html="ordinalDisplay()"></h1>
-		  <div class="tabs">
-			  <button class="tabButton"style="width:10%;height:2.5vw;" @click="tab = 1">Ordinals</button>
-        <button class="tabButton"style="width:10%;height:2.5vw;" @click="tab = 2">Options</button>
-        <button class="tabButton"style="width:10%;height:2.5vw;" @click="tab = 3">Achievements</button>
-        <button class="tabButton"style="width:10%;height:2.5vw;" @click="tab = 4">Markup</button>
-        <button class="tabButton"style="width:10%;height:2.5vw;" @click="tab = 5">Boosters</button>
+		<p v-html="calculateHardy(game.ordinal, game.over, game.base)" v-if="isFinite(calculateHardy(game.ordinal, game.over, game.base))"></p>
+		<div class="tabs">
+			<button class="tabButton"style="width:15%;" @click="tab = 1">Ordinals</button>
+        <button class="tabButton"style="width:15%;" @click="tab = 2">Options</button>
+        <button class="tabButton"style="width:15%;" @click="tab = 3">Achievements</button>
+        <button class="markup specialButton"style="width:15%;" @click="tab = 4" v-if="">Markup</button>
+        <button class="tabButton"style="width:15%;" @click="tab = 5" v-if="false">Boosters</button>
       </div>
       <br>
+
       <div v-if="tab==1">
         <button onclick="succ()">s u c c</button>
-        <button onclick="maximize()">m a x x</button>
+        <button onclick="maximize()">m a x x</button><br>
+        <button onclick="markup()">{{calculateHardy(game.ordinal, game.over, game.base) > 10240 ? `Markup to gain ${calcOrdPoints(game.ordinal, game.base, game.over)} Ordinal Points`: "Reach 10240 to Markup"}}</button>
       </div>
+
       <div v-if="tab==2">
-        <button onclick="switchTheme()">Current theme: {{["Cheater", "Light","Dark","Unpingabot"][style]}}</button>
+        <button onclick="theme.toggleTheme()">Current theme: {{["Light","Dark","Unpingabot"][game.themeId]}}</button><br>
+        <button onclick="hardReset()">Hard Reset</button>
+        <button onclick="exportSave()">Export</button>
+        <button onclick="importSave()">Import</button>
       </div> 
-    <link :href="style == 1 ? 'light.css' : style == 2 ? 'dark.css' : 'blue.css'" rel="stylesheet" type="text/css" />
-    
-    
+      <div v-if="tab==3">no</div>
+      <div v-if="tab==4">
+        <h3>You have {{game.ordinalPoints}} Ordinal Points.</h3> <!-- gonna add subtab css -->
+        <button class="markup" onclick="markup()">{{calculateHardy(game.ordinal, game.over, game.base) >= 10240 ? `Markup for ${calcOrdPoints(game.ordinal, game.base, game.over)} OP`: "Reach 10240 to Markup"}}</button>
+        <br>
+        <br>
+        <div class="tabs">
+			    <button class="markup subtabButton"style="width:15%;" @click="markupSubTab = 1">Automation</button>
+          <button class="markup subtabButton"style="width:15%;" @click="markupSubTab = 2">Factors</button>
+        </div><br>
+        <div v-if="markupSubTab == 1">
+          <strong>Tier 1 Automation</strong><br><br>
+          You have {{game.automation.successor.amount}} successor autoclickers, clicking the successor button {{game.automation.successor.amount}} times per second.<br>
+          You have {{game.automation.maximize.amount}} maximize autoclickers, clicking the maximize button {{game.automation.maximize.amount}} times per second.<br><br>
+          <button class="markup" onclick="buySuccessorAuto()">Buy Successor Autoclicker for {{getAutoCost("successor")}} OP</button>
+          <button class="markup" onclick="buyMaximizeAuto()">Buy Maximize Autoclicker for {{getAutoCost("maximize")}} OP</button>
+        </div>
+        <div v-if="markupSubTab == 2">
+          Factors go here
+        </div>
+        
+      </div> 
+
+    <!--<link :href="style == 1 ? 'css/light.css' : style == 2 ? 'css/dark.css' : 'css/blue.css'" rel="stylesheet" type="text/css" />
+    -->
+
+    <link :href="game.themeId !== 2 ? 'css/main.css' : 'css/blue.css'" rel="stylesheet"> 
+    <!--<link href="css/blue.css" rel="stylesheet" v-if="game.themeId === 2">  due to a large difference in the styles -->
   </div>
   </body>
 </html>

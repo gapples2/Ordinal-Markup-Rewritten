@@ -1,0 +1,89 @@
+:root {
+  --textColor: #000000;
+  --bgColor: #000000;
+}
+.markup {
+  color: #FFFFFF;
+  background: #000000;
+  border-color:#B67F33;
+  border-style: solid;
+  border-weight: 10px;
+  cursor: pointer;
+  transition-duration: 0.1s;
+  min-width: 150px;
+  border-radius: 5px;
+  font-family: sans-serif;
+}
+
+.tabButton {
+  font-family: sans-serif;
+  color: #000000;
+  background: #FFFFFF;
+  border-radius: 5px;
+  border-color: #000000;
+  border-weight: 10px;
+  cursor: pointer;
+  transition-duration: 0.1s;
+  min-width: 150px;
+  height: 40px;
+  font-size: 15pt;
+  font-weight: bold;
+}
+
+.subtabButton {
+  font-family: sans-serif;
+  border-radius: 5px;
+  border-weight: 5px;
+  cursor: pointer;
+  transition-duration: 0.1s;
+  min-width: 115px;
+  height: 25px;
+  font-size: 10pt;
+  font-weight: bold;
+}
+.markup:not(.specialButton):not(.subtabButton) {
+  color: #FFFFFF;
+  background: #000000;
+  border-color:#B67F33;
+  border-radius: 1px;
+  border-width: 2px
+}
+
+.tabButton:hover {
+  background: #DFDFDF
+}
+.specialButton {
+  height: 40px;
+  font-size: 20px;
+  font-weight: bold;
+}
+body {
+  font-family: sans-serif;
+  margin: 2em;
+  color: var(--textColor);
+  background-color: var(--bgColor);
+  text-align: center;
+}
+
+.unboughtthing {
+    background-color: white !important;
+    border-color: black !important;
+    color: black !important;
+}
+button {
+  font-family: sans-serif;
+  color: #000000;
+  background: #FFFFFF;
+  border-radius: 2px;
+  border-color: #000000;
+  border-width:1.5px;
+  cursor: pointer;
+  transition-duration: 0.1s;
+  
+}
+button:not(.markup):not(.tabButton):not(.subtabButton) {
+  height: 60px;font-size: 20px;
+}
+button:hover {
+  background: #EFEFEF
+}
