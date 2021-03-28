@@ -31,14 +31,18 @@ function ordinalDisplay() {
   )
 }
 
-function succ() {
-  if((game.ordinal + 1) % game.base == 0) game.over++
-  else game.ordinal++
+function succ(amount = 1) {
+  while (game.over == 0 && amount > 0) {
+    if((game.ordinal + 1) % game.base == 0) game.over++
+    else game.ordinal++
+    amount -= 1
+  }
+  game.over += amount
 }
 
-function maximize() {
+function maximize(amount = 1) {
   if(((game.ordinal + 1) % game.base == 0) && game.over > 0) {
+    game.ordinal += Math.max(Math.min(Math.floor(game.over/game.base), amount), 1)
     game.over = 0
-    game.ordinal++
   }
 }
