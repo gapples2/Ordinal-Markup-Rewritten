@@ -57,7 +57,8 @@
           <button onclick="theme.toggleTheme()">Current theme: {{["Light","Dark","Custom"][game.themeId]}}</button><br><br>
           <button onclick="hardReset()">Hard Reset</button><br><br>
           <button onclick="exportSave()">Export</button>
-          <button onclick="importSave()">Import</button>
+          <button onclick="importSave()">Import</button><br><br>
+          <button onclick="save()">Save</button>
         </div>
 
         <div v-if="(optionSubTab == 2)&&(game.themeId == 2)">
