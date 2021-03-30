@@ -49,7 +49,7 @@
         <div class="tabs">
 			    <button class="subtabButton"style="width:15%;" @click="optionSubTab = 1">Options</button>
           <button class="subtabButton"style="width:15%;" @click="optionSubTab = 3">Hotkeys</button>
-          <button class="subtabButton"style="width:15%;" @click="optionSubTab = 2">Custom Theme</button>
+          <button v-if="game.themeId == 2" class="subtabButton"style="width:15%;" @click="optionSubTab = 2">Custom Theme</button>
           
         </div><br>
 
