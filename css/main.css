@@ -1,11 +1,25 @@
 :root {
   --textColor: #000000;
   --bgColor: #000000;
+  --markupTextColor: #ffffff;
+  --markupBgColor: #000000;
+  --markupBorderColor: #B67F33;
+  --tabButtonTextColor: #000000;
+  --tabButtonBgColor: #ffffff;
+  --tabButtonBorderColor: #000000;
+  --tabButtonHover: #dfdfdf;
+  --buttonTextColor: #000000;
+  --buttonBgColor: #ffffff;
+  --buttonBorderColor: #000000;
+  --buttonHoverColor: #EFEFEF;
+  --boosterTextColor: #3838ff;
+  --boosterBgColor: #000000;
+  --boosterBorderColor: #3838ff;
 }
 .markup {
-  color: #FFFFFF;
-  background: #000000;
-  border-color:#B67F33;
+  color: var(--markupTextColor);
+  background: var(--markupBgColor);
+  border-color: var(--markupBorderColor);
   border-style: solid;
   border-weight: 10px;
   cursor: pointer;
@@ -17,10 +31,10 @@
 
 .tabButton {
   font-family: sans-serif;
-  color: #000000;
-  background: #FFFFFF;
+  color: var(--tabButtonTextColor);
+  background: var(--tabButtonBgColor);
   border-radius: 5px;
-  border-color: #000000;
+  border-color: var(--tabButtonBorderColor);
   border-weight: 10px;
   cursor: pointer;
   transition-duration: 0.1s;
@@ -41,16 +55,16 @@
   font-size: 10pt;
   font-weight: bold;
 }
-.markup:not(.specialButton):not(.subtabButton) {
-  color: #FFFFFF;
-  background: #000000;
-  border-color:#B67F33;
+.markup:not(.specialButton):not(.subtabButton):not(.factor):not(.factorShift) {
+  color: var(--markupTextColor);
+  background: var(--markupBgColor);
+  border-color: var(--markupBorderColor);
   border-radius: 1px;
   border-width: 2px
 }
 
 .tabButton:hover {
-  background: #DFDFDF
+  background: var(--tabButtonHover)
 }
 .specialButton {
   height: 40px;
@@ -59,31 +73,82 @@
 }
 body {
   font-family: sans-serif;
-  margin: 2em;
+  margin: 0;
   color: var(--textColor);
   background-color: var(--bgColor);
   text-align: center;
 }
 
-.unboughtthing {
-    background-color: white !important;
-    border-color: black !important;
-    color: black !important;
-}
 button {
   font-family: sans-serif;
-  color: #000000;
-  background: #FFFFFF;
+  color: var(--buttonTextColor);
+  background: var(--buttonBgColor);
   border-radius: 2px;
-  border-color: #000000;
+  border-color: var(--buttonBorderColor);
   border-width:1.5px;
   cursor: pointer;
   transition-duration: 0.1s;
   
 }
-button:not(.markup):not(.tabButton):not(.subtabButton) {
+button:not(.markup):not(.tabButton):not(.subtabButton):not(.booster) {
   height: 60px;font-size: 20px;
 }
 button:hover {
-  background: #EFEFEF
+  background: var(--buttonHoverColor)
+}
+
+.factor {
+  min-width: 150px;
+  min-height: 40px;
+  margin-bottom: 3px;
+  border-radius: 5px;
+}
+
+.factorShift {
+  min-width: 200px;
+  min-height: 60px;
+  margin-bottom: 3px;
+  border-radius: 5px;
+}
+
+#ordinalDisplay {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 50vw;
+  display: inline-block;
+  position: relative;
+  left: 0;
+}
+
+#ordinalContainer {
+  text-align: left;
+  margin-left: 25vw;
+  width: 50vw;
+  white-space: nowrap;
+}
+
+#ordinalBase {
+  position: relative;
+  top: -12px;
+}
+
+.booster {
+  color: var(--boosterTextColor);
+  background: var(--boosterBgColor);
+  border-color: var(--boosterBorderColor);
+  border-style: solid;
+  border-weight: 10px;
+  cursor: pointer;
+  transition-duration: 0.1s;
+  min-width: 150px;
+  border-radius: 5px;
+  font-family: sans-serif;
+}
+
+.booster:not(.specialButton):not(.subtabButton) {
+  color: var(--boosterTextColor);
+  background: var(--boosterBgColor);
+  border-color: var(--boosterBorderColor);
+  border-radius: 5px;
+  border-width: 2px
 }

@@ -4,92 +4,162 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Ordinal Markup : Rewritten</title> <!-- LMAO -->
-  <link rel="icon" href="https://cdn.glitch.com/310d7aca-4728-445f-9084-db26ceccd7b5%2FOrdinal%20Markup%20logo.png?v=1587927427273"/>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12">
-	</script>
-	<script src="https://raw.githack.com/Naruyoko/ExpantaNum.js/master/ExpantaNum.js" defer>
-	</script>
-	<script src="js/loop.js" defer>
-	</script>
-	<script src="js/tools.js" defer>
-	</script>
-	<script src="js/ordinal.js" defer>
-	</script>
-	<script src="js/markup.js" defer>
-	</script>
-	<script src="js/theme.js" defer>
-	</script>
+	<title>Ordinal Markup : Rewritten</title>
+	<link rel="icon" href="https://cdn.glitch.com/310d7aca-4728-445f-9084-db26ceccd7b5%2FOrdinal%20Markup%20logo.png?v=1587927427273"
+	/>
+  <link href="css/main.css" rel="stylesheet"> 
+	<!--<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12">-->
+  <script src="https://vuejs.org/js/vue.js"></script> <!-- for errors -->
+	<script src="https://raw.githack.com/Naruyoko/ExpantaNum.js/master/ExpantaNum.js" defer></script>
+  
+	<script src="js/loop.js" defer></script>
+	<script src="js/ordinal.js" defer></script>
+	<script src="js/markup.js" defer></script>
+  <script src="js/boosters.js" defer></script>
+	<script src="js/theme.js" defer></script>
 
-	<script src="js/script.js" defer>
-	</script>
+  <script src="js/data.js" defer></script>
+
+  <script src="js/tools.js" defer></script>
+  <script src="js/hotkeys.js" defer></script>
+  <script src="js/script.js" defer></script>
 </head>
 
 <body>
 	<div id="app">
-		<h1 v-html="ordinalDisplay()"></h1>
-		<p v-html="calculateHardy(game.ordinal, game.over, game.base)" v-if="isFinite(calculateHardy(game.ordinal, game.over, game.base))"></p>
+		<h1 id="ordinalContainer"><span v-html="ordinalDisplay()" id="ordinalDisplay"></span>&nbsp;<span id="ordinalBase">({{ game.base }})</span></h1>
+		<span v-html="formatNumber(calculateHardy(game.ordinal, game.over, game.base),3)" v-if="isFinite(calculateHardy(game.ordinal, game.over, game.base)) && !game.isPsi"></span><br><br>
+
 		<div class="tabs">
 			<button class="tabButton"style="width:15%;" @click="tab = 1">Ordinals</button>
         <button class="tabButton"style="width:15%;" @click="tab = 2">Options</button>
         <button class="tabButton"style="width:15%;" @click="tab = 3">Achievements</button>
-        <button class="markup specialButton"style="width:15%;" @click="tab = 4" v-if="">Markup</button>
-        <button class="tabButton"style="width:15%;" @click="tab = 5" v-if="false">Boosters</button>
-      </div>
+      <button v-if="game.unlocks.markup" class="markup specialButton"style="width:15%;" @click="tab = 4" >Markup</button>
+      <button class="specialButton booster"style="width:15%;" @click="tab = 5" v-if="game.unlocks.boosters">Boosters</button>
+    </div>
       <br>
 
       <div v-if="tab==1">
-        <button onclick="succ()">s u c c</button>
-        <button onclick="maximize()">m a x x</button><br>
-        <button onclick="markup()">{{calculateHardy(game.ordinal, game.over, game.base) > 10240 ? `Markup to gain ${calcOrdPoints(game.ordinal, game.base, game.over)} Ordinal Points`: "Reach 10240 to Markup"}}</button>
+        <button onclick="succ()">Increase ordinal by 1 {{hotkeyPresets[game.preset].successor != "" ? `(${hotkeyPresets[game.preset].successor})` : ""}}</button>
+        <button onclick="maximize()">Maximize ordinal {{hotkeyPresets[game.preset].maximize != "" ? `(${hotkeyPresets[game.preset].maximize})` : ""}}</button><br><br>
+        <button onclick="markup()" v-html="markupButtonText()"></button>
       </div>
 
       <div v-if="tab==2">
         <div class="tabs">
 			    <button class="subtabButton"style="width:15%;" @click="optionSubTab = 1">Options</button>
-          <button v-if="game.themeId == 2" class="subtabButton"style="width:15%;" @click="optionSubTab = 2">Color Scheme</button>
+          <button class="subtabButton"style="width:15%;" @click="optionSubTab = 3">Hotkeys</button>
+          <button class="subtabButton"style="width:15%;" @click="optionSubTab = 2">Custom Theme</button>
+          
         </div><br>
-        <div v-if="(optionSubTab == 1)||(game.themeId != 2)">
-          <button onclick="theme.toggleTheme()">Current theme: {{["Light","Dark","Unpingabot"][game.themeId]}}</button><br>
-          <button onclick="hardReset()">Hard Reset</button>
+
+        <div v-if="((optionSubTab == 1)||(game.themeId != 2))&&optionSubTab != 3">
+          <button onclick="theme.toggleTheme()">Current theme: {{["Light","Dark","Custom"][game.themeId]}}</button><br><br>
+          <button onclick="hardReset()">Hard Reset</button><br><br>
           <button onclick="exportSave()">Export</button>
           <button onclick="importSave()">Import</button>
         </div>
+
         <div v-if="(optionSubTab == 2)&&(game.themeId == 2)">
-          Your color scheme: <br>
+          <h1>Your color scheme:</h1>
+          <button onclick="exportTheme()">Export Theme</button>
+          <button onclick="importTheme()">Import Theme</button>
+          <h2>Main</h2>
           Text Color: <input v-model="game.customTheme.textColor"><br>
           Background Color: <input v-model="game.customTheme.bgColor"><br>
+          <h2>Buttons</h2>
+          Text Color: <input v-model="game.customTheme.buttonTextColor"><br>
+          Background Color: <input v-model="game.customTheme.buttonBgColor"><br>
+          Border Color: <input v-model="game.customTheme.buttonBorderColor"><br>
+          Hover Color: <input v-model="game.customTheme.buttonHoverColor"><br>
+          <h2>Tab Buttons</h2>
+          Text Color: <input v-model="game.customTheme.tabButtonTextColor"><br>
+          Background Color: <input v-model="game.customTheme.tabButtonBgColor"><br>
+          Border Color: <input v-model="game.customTheme.tabButtonBorderColor"><br>
+          Hover Color: <input v-model="game.customTheme.tabButtonHover"><br>
+          <div v-if="game.unlocks.markup"><h2>Markup</h2>
+            Text Color: <input v-model="game.customTheme.markupTextColor"><br>
+            Background Color: <input v-model="game.customTheme.markupBgColor"><br>
+            Border Color: <input v-model="game.customTheme.markupBorderColor"><br>
+          </div>
+          <div v-if="game.unlocks.boosters"><h2>Boosters</h2>
+            Text Color: <input v-model="game.customTheme.boosterTextColor"><br>
+            Background Color: <input v-model="game.customTheme.boosterBgColor"><br>
+            Border Color: <input v-model="game.customTheme.boosterBorderColor"><br>
+          </div><br>
           <button onclick="updateTheme()">Apply Theme</button>
         </div>
-      </div> 
+        <div v-if="optionSubTab == 3">
+          <button onclick="addPreset()">Add a preset</button><br><br>
+          <button class="subtabButton"style="width:15%; text-transform: capitalize;" v-for="i in Object.keys(hotkeyPresets)" @click="game.preset = i">{{i}}</button>
+          <div v-if="game.preset == 'main'">
+            <h2>Select another preset to unlock editing capabilities</h2>
+          </div>
+          <div v-if="game.preset != 'main'"><br>
+            <button @click="removePreset(game.preset)">Delete this preset</button><br>
+            <br>
+            Successor: <input v-model="hotkeyPresets[game.preset].successor"><br>
+            Maximize: <input v-model="hotkeyPresets[game.preset].maximize"><br>
+            Markup: <input v-model="hotkeyPresets[game.preset].markup"><br>
+            Maxall: <input v-model="hotkeyPresets[game.preset].maxall"><br>
+            Factor Shift: <input v-model="hotkeyPresets[game.preset].factorShift"><br>
+          </div>
+        </div>
+      </div>
+
       <div v-if="tab==3">no</div>
+
       <div v-if="tab==4">
-        <h3>You have {{game.ordinalPoints}} Ordinal Points.</h3> <!-- gonna add subtab css -->
-        <button class="markup" onclick="markup()">{{calculateHardy(game.ordinal, game.over, game.base) >= 10240 ? `Markup for ${calcOrdPoints(game.ordinal, game.base, game.over)} OP`: "Reach 10240 to Markup"}}</button>
+        <!-- <h3>You have {{formatNumber(game.ordinalPoints)}} Ordinal Points.</h3> gonna add subtab css -->
+        <h3>You have <span v-html="displayOp()"></span> Ordinal Points</h3>
+        <button class="markup" onclick="markup()" v-html="markupButtonText()"></button>
         <br>
         <br>
         <div class="tabs">
 			    <button class="markup subtabButton"style="width:15%;" @click="markupSubTab = 1">Automation</button>
           <button class="markup subtabButton"style="width:15%;" @click="markupSubTab = 2">Factors</button>
         </div><br>
+
         <div v-if="markupSubTab == 1">
           <strong>Tier 1 Automation</strong><br><br>
-          You have {{game.automation.successor.amount}} successor autoclickers, clicking the successor button {{game.automation.successor.amount}} times per second.<br>
-          You have {{game.automation.maximize.amount}} maximize autoclickers, clicking the maximize button {{game.automation.maximize.amount}} times per second.<br><br>
-          <button class="markup" onclick="buySuccessorAuto()">Buy Successor Autoclicker for {{getAutoCost("successor")}} OP</button>
-          <button class="markup" onclick="buyMaximizeAuto()">Buy Maximize Autoclicker for {{getAutoCost("maximize")}} OP</button>
+          You have <span v-html="displayAutoclickerThing(game.automation.successor.amount)"></span> successor autoclickers, clicking the successor button <span v-html="displayAutoclickerProduction('successor')"></span> times per second.<br>
+          You have <span v-html="displayAutoclickerThing(game.automation.maximize.amount)"></span> maximize autoclickers, clicking the maximize button <span v-html="displayAutoclickerProduction('maximize')"></span> times per second.<br><br>
+          <button class="markup" onclick="buySuccessorAuto()">Buy Successor Autoclicker for <span v-html="displayAutoclickerThing(getAutoCost('successor'))"></span> OP</button>
+          <button class="markup" onclick="buyMaximizeAuto()">Buy Maximize Autoclicker for <span v-html="displayAutoclickerThing(getAutoCost('maximize'))"></span> OP</button>
+          <button class="markup" onclick="maxAllAutobuyers()">Max All {{hotkeyPresets[game.preset].maxall != "" ? `(${hotkeyPresets[game.preset].maxall})` : ""}}
+          </button>
         </div>
+
         <div v-if="markupSubTab == 2">
-          Factor 1 x1 
+          Your factors are boosting your autoclickers by x{{formatNumber(factorMult(), 1)}}<br><br>
+          <button onclick="factorShift()" class="factorShift markup">Factor Shift ({{game.factorShifts}}) <br>Requires <span v-html = "factorShiftText()"></span> OP&nbsp; {{hotkeyPresets[game.preset].factorShift != "" ? `(${hotkeyPresets[game.preset].factorShift})` : ""}}</button><br><br>
+          <span id="factors" v-for="i in [0,1,2,3,4,5,6]">
+            <button  v-if="factorUnlocked(i)" @click="buyFactor(i)" class="factor markup"> 
+              Factor {{i+1}}: x{{formatNumber(factorEffect(i), 1)}} <br> 
+              Cost: {{formatNumber(factorCost(i))}} 
+            </button><br> 
+          </span><br>
+          
         </div>
         
       </div> 
+      <div v-if="tab==5">
+        <h2>Factor Boosts: {{game.factorBoosts}}</h2>
+        <div class="tabs">
+			    <button class="subtabButton booster"style="width:15%;" @click="boosterSubTab = 1">Booster Upgrades</button>
+          <button v-if="false" class="subtabButton booster"style="width:15%;" @click="boosterSubTab = 2">Tier 2 Automation</button>
+          <button v-if="false" class="subtabButton booster"style="width:15%;" @click="boosterSubTab = 3">Challenges</button>
+        </div><br>
+        <div v-if="boosterSubTab == 1">
+          <h3>Boosters: {{game.boosters}}</h2>
+        </div>
+      </div>
 
     <!--<link :href="style == 1 ? 'css/light.css' : style == 2 ? 'css/dark.css' : 'css/blue.css'" rel="stylesheet" type="text/css" />
     -->
 
-    <link href="css/main.css" rel="stylesheet"> 
+    
     <!--<link href="css/blue.css" rel="stylesheet" v-if="game.themeId === 2">  due to a large difference in the styles -->
-  </div>
+    </div>
   </body>
-</html>
+</html> 

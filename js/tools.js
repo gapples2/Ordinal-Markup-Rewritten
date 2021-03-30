@@ -1,7 +1,7 @@
 // saving and other tools
 
 function isEncodedExpantaNum(thing) {
-  return thing.hasOwnProperty("sign") && thing.hasOwnProperty("array") && thing.hasOwnProperty("layer")
+  return thing?.hasOwnProperty("sign") && thing.hasOwnProperty("array") && thing.hasOwnProperty("layer")
 }
 
 function expantaIze(thing) {
@@ -16,23 +16,25 @@ function decodeObject(thing) {
   let clone = {...thing}
   for(let i in clone) {
     if(isEncodedExpantaNum(thing[i])) clone[i] = expantaIze(thing[i])
-    else if(typeof thing[i]=="object" && thing[i].constructor.name != "Array") clone[i] = decodeObject(thing[i])
+    else if(typeof thing[i]=="object" && thing[i]?.constructor.name != "Array") clone[i] = decodeObject(thing[i])
   }
   return clone
 }
 
 function save() {
   localStorage.gamesave = JSON.stringify(game)
+  localStorage.presets = JSON.stringify(hotkeyPresets)
 }
 
 async function load() {
   if (localStorage.gamesave) game = await mergeDeep(game,decodeObject(JSON.parse(localStorage.gamesave)))
+  if (localStorage.presets) hotkeyPresets = await mergeDeep(hotkeyPresets,decodeObject(JSON.parse(localStorage.presets)))
   setInterval(loop, 20) // nice
 } 
 
 window.onload = async () => {
   await load()
-  
+  updateTheme()
   setInterval(save,10000) // 0.1 tick per second, 10000ms/10s delay
 }
 
@@ -82,5 +84,25 @@ function importSave() {
     }; 
     return
   };
-  game = mergeDeep(game,decodeObject(JSON.parse(atob(x))))
+  if(x!==null&&x!==undefined){
+    game = mergeDeep(game,decodeObject(JSON.parse(atob(x))))
+    save()
+  }
+}
+
+function formatNumber(n, dec = 0) {
+  if (isNaN(n)) return "NaN"
+  const expanta = new ExpantaNum(n)
+  if (expanta.gte("1e1e1e1e5")) return "way too large"
+  if (expanta.lt(1e6)) return expanta.toFixed(dec)
+
+  const exponent = expanta.log10().floor()
+  const mantissa = expanta.div(ExpantaNum.pow(10, exponent)).toFixed(3)
+
+  if (mantissa.startsWith("10")) return `1.000e${formatNumber(exponent.plus(1))}`
+  return`${mantissa}e${formatNumber(exponent)}`
+}
+
+function hasUpgrade(row, column) {
+  return game["col"+column] >= row; 
 }
